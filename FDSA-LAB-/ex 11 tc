@@ -1,0 +1,26 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Sample Test Data (instead of online dataset)
+data = {
+    'date': ['2023-01-01', '2023-02-01', '2023-03-01', '2023-04-01'],
+    'value': [100, 150, 130, 170]
+}
+
+# Create DataFrame
+df = pd.DataFrame(data)
+
+# Convert to datetime
+df['date'] = pd.to_datetime(df['date'])
+
+# Set index
+df.set_index('date', inplace=True)
+
+# Plot
+plt.figure(figsize=(8, 4))
+plt.plot(df.index, df['value'])
+plt.title("Test Case: Sales Over Time")
+plt.xlabel("Date")
+plt.ylabel("Sales")
+plt.grid()
+plt.show()

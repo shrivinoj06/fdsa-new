@@ -1,0 +1,73 @@
+# import all libraries
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.linear_model import LinearRegression
+import warnings
+warnings.filterwarnings('ignore')
+
+# create sample housing dataset
+data = {
+    'area':[800,900,1000,1100,1200,1300,1400,1500,1600,1700,
+            1800,1900,2000,2100,2200,2300,2400,2500,2600,2700],
+    'price':[200000,220000,240000,260000,280000,300000,320000,340000,360000,380000,
+             400000,420000,440000,460000,480000,500000,520000,540000,560000,580000]
+}
+
+housing = pd.DataFrame(data)
+
+print("Dataset Preview")
+print(housing.head())
+
+# number of observations
+print("Total rows:", len(housing.index))
+
+# filter only area and price
+df = housing[['area','price']]
+
+# scaling variables
+scaler = MinMaxScaler()
+df[['area','price']] = scaler.fit_transform(df[['area','price']])
+
+print("\nScaled Data")
+print(df.head())
+
+# visualize relationship
+sns.regplot(x="area", y="price", data=df, fit_reg=False)
+plt.title("Area vs Price")
+plt.show()
+
+# train test split
+df_train, df_test = train_test_split(df, train_size=0.7, test_size=0.3, random_state=10)
+
+print("\nTrain size:", len(df_train))
+print("Test size:", len(df_test))
+
+# split X and Y
+X_train = df_train['area'].values.reshape(-1,1)
+y_train = df_train['price']
+
+X_test = df_test['area'].values.reshape(-1,1)
+y_test = df_test['price']
+
+# build model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# prediction
+y_pred = model.predict(X_test)
+
+print("\nPredicted Values:")
+print(y_pred)
+
+# plot prediction
+plt.scatter(X_test, y_test)
+plt.plot(X_test, y_pred)
+plt.title("Linear Regression Prediction")
+plt.xlabel("Area")
+plt.ylabel("Price")
+plt.show()
